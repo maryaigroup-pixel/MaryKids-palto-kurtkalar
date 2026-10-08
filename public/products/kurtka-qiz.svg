@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbe3ee"/><stop offset="1" stop-color="#f3bfd5"/></linearGradient></defs>
+<rect width="400" height="500" fill="url(#g)"/>
+<g fill="#fff" opacity=".55"><circle cx="60" cy="70" r="4"/><circle cx="330" cy="50" r="3"/><circle cx="350" cy="160" r="5"/><circle cx="40" cy="260" r="3"/><circle cx="360" cy="380" r="4"/><circle cx="80" cy="430" r="5"/><circle cx="200" cy="40" r="3"/></g>
+<ellipse cx="200" cy="462" rx="120" ry="12" fill="#000" opacity=".08"/>
+<path d="M140 110 L260 110 L310 140 L340 330 Q325 345 305 335 L290 230 L295 395 Q200 420 105 395 L110 230 L95 335 Q75 345 60 330 L90 140 Z" fill="#ec8db2"/>
+<path d="M108 170 Q200 184 292 170" stroke="#c9628c" stroke-width="3" fill="none" opacity=".7"/><path d="M108 215 Q200 229 292 215" stroke="#c9628c" stroke-width="3" fill="none" opacity=".7"/><path d="M108 260 Q200 274 292 260" stroke="#c9628c" stroke-width="3" fill="none" opacity=".7"/><path d="M108 305 Q200 319 292 305" stroke="#c9628c" stroke-width="3" fill="none" opacity=".7"/><path d="M108 350 Q200 364 292 350" stroke="#c9628c" stroke-width="3" fill="none" opacity=".7"/>
+<path d="M200 120 L200 405" stroke="#c9628c" stroke-width="4"/>
+<path d="M135 115 Q200 40 265 115 Q245 70 200 62 Q155 70 135 115Z" fill="#c9628c"/>
+<path d="M128 118 Q200 55 272 118 Q272 100 255 90 Q200 45 145 90 Q128 100 128 118Z" fill="#fff6f0"/>
+<rect x="96" y="320" width="40" height="18" rx="9" fill="#c9628c"/><rect x="264" y="320" width="40" height="18" rx="9" fill="#c9628c"/></svg>

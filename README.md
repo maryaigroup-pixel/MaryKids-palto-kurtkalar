@@ -62,8 +62,21 @@ npm run dev                  # http://localhost:3000
 3. Test kodini o'chirib, Redeploy qiling.
 4. Ads Manager'da kampaniya maqsadini **Sales**, konversiya hodisasini **Purchase** qilib tanlang. Columns → *Purchases*, *Purchase ROAS* qo'shing.
 
-## Suratlarni almashtirish
-`public/products/` papkasiga haqiqiy suratlarni (`.jpg`/`.webp`, 4:5 nisbat) joylang va `lib/products.ts` dagi `image`, nom va narxlarni yangilang.
+## Katalog
+Mahsulotlar `lib/products.ts` da. Har bir rang saytda alohida okoshka bo'lib chiqadi, mijoz bittasini tanlamasa lid qoldira olmaydi. Telegram'ga **mahsulot, rang (yoki brend) va narx** keladi.
+
+| Qator | Ranglar | Narx |
+|---|---|---|
+| Palto | Oq, Seriy, Qora, Choco | ~~1 360 000~~ → **760 000** |
+| Qizlar kurtkasi | Oq, Choco, Bordo | ~~1 320 000~~ → **720 000** |
+| O'g'il bolalar kurtkasi | Dolce & Gabbana, Boss | ~~1 480 000~~ → **890 000** |
+| On Cloud shapka | Oq, Seriy, Bejeviy, Qora | narxini so'rang |
+| Prada shapka | Oq, Qora, Seriy, To'q jigarrang | narxini so'rang |
+
+Shapkalarga narx qo'yish uchun `price` va `oldPrice` qo'shing.
+
+### Suratlarni almashtirish
+Hozir vaqtinchalik illyustratsiyalar turibdi. Haqiqiy suratlarni (`.jpg`/`.webp`, 4:5 nisbat) shu nom bilan `public/products/` ga joylang, masalan `palto-oq.jpg`, va `lib/products.ts` dagi `v()` funksiyasida `.svg` ni `.jpg` ga o'zgartiring.
 
 ## Tuzilma
 ```

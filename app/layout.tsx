@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   title: "MaryKids — bolalar uchun palto, kurtka va shapkalar",
   description:
-    "Qizingiz va o'g'lingiz uchun eng chiroyli palto, kurtka va shapkalar. Sifatli, issiq va zamonaviy. O'zbekiston bo'ylab yetkazib berish.",
+    "MaryKids onlayn va offlayn do'koni: qizingiz va o'g'lingiz uchun eng chiroyli palto, kurtka va shapkalar. 45% gacha chegirma, O'zbekiston bo'ylab yetkazib berish.",
   openGraph: {
     title: "MaryKids — bolalar uchun qishki kiyimlar",
     description: "Qizingiz va o'g'lingiz uchun eng chiroyli palto, kurtka va shapkalar.",

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e7d6da"/><stop offset="1" stop-color="#cca9b1"/></linearGradient>
+<linearGradient id="sh" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".12"/><stop offset=".5" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#000" stop-opacity=".14"/></linearGradient></defs>
+<rect width="400" height="500" fill="url(#g)"/>
+<g fill="#fff" opacity=".6"><circle cx="60" cy="70" r="4"/><circle cx="330" cy="50" r="3"/><circle cx="352" cy="160" r="5"/><circle cx="40" cy="260" r="3"/><circle cx="362" cy="380" r="4"/><circle cx="70" cy="430" r="5"/><circle cx="200" cy="34" r="3"/></g>
+<ellipse cx="200" cy="466" rx="125" ry="12" fill="#000" opacity=".1"/>
+<path d="M140 112 L260 112 L310 142 L340 332 Q325 347 305 337 L290 232 L295 398 Q200 424 105 398 L110 232 L95 337 Q75 347 60 332 L90 142 Z" fill="#7a1f33"/>
+<path d="M140 112 L260 112 L310 142 L340 332 Q325 347 305 337 L290 232 L295 398 Q200 424 105 398 L110 232 L95 337 Q75 347 60 332 L90 142 Z" fill="url(#sh)"/>
+<path d="M106 172 Q200 186 294 172" stroke="#551523" stroke-width="3" fill="none" opacity=".75"/><path d="M106 216 Q200 230 294 216" stroke="#551523" stroke-width="3" fill="none" opacity=".75"/><path d="M106 260 Q200 274 294 260" stroke="#551523" stroke-width="3" fill="none" opacity=".75"/><path d="M106 304 Q200 318 294 304" stroke="#551523" stroke-width="3" fill="none" opacity=".75"/><path d="M106 348 Q200 362 294 348" stroke="#551523" stroke-width="3" fill="none" opacity=".75"/>
+<path d="M200 122 L200 410" stroke="#d9b77a" stroke-width="5"/><rect x="194" y="150" width="12" height="22" rx="3" fill="#d9b77a"/>
+<path d="M135 117 Q200 40 265 117 Q245 70 200 62 Q155 70 135 117Z" fill="#551523"/>
+<path d="M126 120 Q200 52 274 120 Q276 100 258 88 Q200 40 142 88 Q124 100 126 120Z" fill="#fbf5ee"/>
+<path d="M140 100 q10 -10 20 0 M170 80 q10 -8 20 0 M210 80 q10 -8 20 0 M240 100 q10 -10 20 0" stroke="#fff" stroke-opacity=".5" stroke-width="3" fill="none"/>
+<rect x="96" y="322" width="40" height="18" rx="9" fill="#551523"/><rect x="264" y="322" width="40" height="18" rx="9" fill="#551523"/>
+<rect x="128" y="290" width="44" height="6" rx="3" fill="#d9b77a" opacity=".9"/><rect x="228" y="290" width="44" height="6" rx="3" fill="#d9b77a" opacity=".9"/></svg>

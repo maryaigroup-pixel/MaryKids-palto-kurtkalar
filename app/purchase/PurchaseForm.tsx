@@ -3,10 +3,18 @@
 import { useState } from "react";
 
 const fmt = (n: string) => n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-const quick = [150000, 300000, 520000, 600000, 1000000];
+const quick = [720000, 760000, 890000, 1480000];
 
-export default function PurchaseForm({ token, needPin }: { token: string; needPin: boolean }) {
-  const [amount, setAmount] = useState("");
+export default function PurchaseForm({
+  token,
+  needPin,
+  defaultAmount,
+}: {
+  token: string;
+  needPin: boolean;
+  defaultAmount?: number;
+}) {
+  const [amount, setAmount] = useState(defaultAmount ? fmt(String(defaultAmount)) : "");
   const [pin, setPin] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [msg, setMsg] = useState("");
@@ -55,7 +63,7 @@ export default function PurchaseForm({ token, needPin }: { token: string; needPi
         <span>To'lov summasi (so'm)</span>
         <input
           inputMode="numeric"
-          placeholder="Masalan: 520 000"
+          placeholder="Masalan: 760 000"
           value={amount}
           onChange={(e) => setAmount(fmt(e.target.value))}
           autoFocus

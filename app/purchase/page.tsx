@@ -57,7 +57,7 @@ export default async function PurchasePage({
                 <strong>🔐 SHA-256 xeshlangan</strong>
               </div>
             </div>
-            <PurchaseForm token={t} needPin={Boolean(process.env.ADMIN_PIN)} />
+            <PurchaseForm token={t} needPin={Boolean(process.env.ADMIN_PIN)} defaultAmount={lead.pv} />
           </>
         )}
       </div>

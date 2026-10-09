@@ -86,7 +86,8 @@ export type LeadToken = {
   fbc?: string;
   ip?: string;
   ua?: string;
-  pr?: string; // mahsulot
+  pr?: string; // mahsulot — rang
+  pv?: number; // saytdagi narx (so'm)
   mp?: string; // maskalangan telefon
   url?: string; // lid qoldirilgan sahifa
 };

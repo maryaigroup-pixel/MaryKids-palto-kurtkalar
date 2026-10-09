@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { products } from "@/lib/products";
+import Image from "next/image";
+import { products, findSelection, formatSum, selectionKey } from "@/lib/products";
 import { trackPixel, getCookie } from "./MetaPixel";
+import { useSelection } from "./Selection";
 
 function formatUzPhone(input: string) {
   let d = input.replace(/\D/g, "");
@@ -18,25 +20,29 @@ function newEventId() {
 }
 
 export default function LeadForm() {
+  const { selected, setSelected } = useSelection();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("+998 ");
-  const [product, setProduct] = useState("");
   const [website, setWebsite] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState("");
 
-  // Mahsulot kartochkasidagi "Tanlash" tugmasi shu yerga yozadi
-  useEffect(() => {
-    const handler = (e: Event) => setProduct((e as CustomEvent<string>).detail);
-    window.addEventListener("select-product", handler);
-    return () => window.removeEventListener("select-product", handler);
-  }, []);
+  const sel = findSelection(selected);
 
+  // Tanlov o'zgarsa, eski xato xabarini olib tashlash
+  useEffect(() => {
+    setStatus((s) => (s === "error" ? "idle" : s));
+  }, [selected]);
   const digits = phone.replace(/\D/g, "");
-  const valid = name.trim().length >= 2 && digits.length === 12;
+  const valid = Boolean(sel) && name.trim().length >= 2 && digits.length === 12;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!sel) {
+      setStatus("error");
+      setError("Avval mahsulot va rangni tanlang");
+      return;
+    }
     if (!valid || status === "loading") return;
     setStatus("loading");
     setError("");
@@ -49,7 +55,7 @@ export default function LeadForm() {
         body: JSON.stringify({
           name,
           phone: digits,
-          product,
+          selection: sel.key,
           eventId,
           website,
           fbp: getCookie("_fbp"),
@@ -61,11 +67,20 @@ export default function LeadForm() {
       if (!res.ok || !json.ok) throw new Error(json.error || "Xatolik");
 
       // Pixel Lead — CAPI bilan bir xil eventID (dublikat bo'lmaydi)
-      trackPixel("Lead", { content_name: product || "MaryKids lid" }, eventId);
+      trackPixel(
+        "Lead",
+        {
+          content_ids: [sel.key],
+          content_name: `${sel.product.title} — ${sel.variant.color}`,
+          content_category: sel.product.category,
+          ...(sel.product.price ? { value: sel.product.price, currency: "UZS" } : {}),
+        },
+        eventId
+      );
       setStatus("success");
 
       const channel = process.env.NEXT_PUBLIC_TELEGRAM_CHANNEL_URL;
-      if (channel) setTimeout(() => (window.location.href = channel), 1500);
+      if (channel) setTimeout(() => (window.location.href = channel), 1800);
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : "Xatolik yuz berdi");
@@ -77,7 +92,12 @@ export default function LeadForm() {
       <div className="form-card success">
         <div className="success-icon">✓</div>
         <h3>Rahmat, {name.split(" ")[0]}!</h3>
-        <p>Arizangiz qabul qilindi. Menejerimiz tez orada siz bilan bog'lanadi.</p>
+        <p>
+          <b>
+            {sel?.product.title} — {sel?.variant.color}
+          </b>{" "}
+          uchun arizangiz qabul qilindi. Menejerimiz tez orada siz bilan bog'lanadi.
+        </p>
         <p className="muted">Telegram kanalimizga yo'naltirilmoqdasiz…</p>
         {process.env.NEXT_PUBLIC_TELEGRAM_CHANNEL_URL && (
           <a className="btn btn-primary" href={process.env.NEXT_PUBLIC_TELEGRAM_CHANNEL_URL}>
@@ -91,7 +111,41 @@ export default function LeadForm() {
   return (
     <form className="form-card" onSubmit={onSubmit} noValidate>
       <h3>Buyurtma qoldiring</h3>
-      <p className="muted">Ismingiz va raqamingizni qoldiring — o'lcham va narxni aytib beramiz.</p>
+
+      {sel ? (
+        <div className="picked">
+          <div className="picked-img">
+            <Image src={sel.variant.image} alt="" fill unoptimized={sel.variant.image.endsWith(".svg")} sizes="64px" />
+          </div>
+          <div>
+            <span className="muted">Siz tanladingiz</span>
+            <strong>
+              {sel.product.title} — {sel.variant.color}
+            </strong>
+            <span className="picked-price">
+              {sel.product.price ? formatSum(sel.product.price) : "Narxini menejer aytadi"}
+            </span>
+          </div>
+        </div>
+      ) : (
+        <p className="pick-hint">👆 Yuqoridagi kolleksiyadan mahsulot va rangni tanlang yoki shu yerda tanlang</p>
+      )}
+
+      <label className="field">
+        <span>Mahsulot va rang</span>
+        <select value={selected} onChange={(e) => setSelected(e.target.value)} required>
+          <option value="">— Tanlang —</option>
+          {products.map((p) => (
+            <optgroup key={p.id} label={p.title + (p.price ? ` · ${formatSum(p.price)}` : "")}>
+              {p.variants.map((v) => (
+                <option key={v.id} value={selectionKey(p.id, v.id)}>
+                  {p.title} — {v.color}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      </label>
 
       <label className="field">
         <span>Ismingiz</span>
@@ -117,18 +171,6 @@ export default function LeadForm() {
         />
       </label>
 
-      <label className="field">
-        <span>Qaysi mahsulot qiziqtiradi?</span>
-        <select value={product} onChange={(e) => setProduct(e.target.value)}>
-          <option value="">Hali tanlamadim — maslahat kerak</option>
-          {products.map((p) => (
-            <option key={p.id} value={p.title}>
-              {p.title} — {p.for}
-            </option>
-          ))}
-        </select>
-      </label>
-
       {/* honeypot */}
       <input
         className="hp"
@@ -141,7 +183,7 @@ export default function LeadForm() {
 
       {status === "error" && <p className="error">{error}</p>}
 
-      <button className="btn btn-primary btn-block" disabled={!valid || status === "loading"}>
+      <button className="btn btn-primary btn-block" disabled={status === "loading"}>
         {status === "loading" ? "Yuborilmoqda…" : "Buyurtma berish"}
       </button>
       <p className="tiny">🔒 Ma'lumotlaringiz uchinchi shaxslarga berilmaydi</p>

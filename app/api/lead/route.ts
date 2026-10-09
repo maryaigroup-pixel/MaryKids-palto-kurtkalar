@@ -12,6 +12,7 @@ import {
 } from "@/lib/crypto";
 import { sendCapiEvent, getClientMeta, buildFbc } from "@/lib/meta";
 import { sendTelegram, escapeHtml, tashkentTime } from "@/lib/telegram";
+import { findSelection, formatSum } from "@/lib/products";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,7 +20,7 @@ export const dynamic = "force-dynamic";
 type Body = {
   name?: string;
   phone?: string;
-  product?: string;
+  selection?: string; // "palto:oq"
   eventId?: string;
   fbp?: string;
   fbc?: string;
@@ -52,7 +53,15 @@ export async function POST(req: Request) {
   const { ip, ua } = getClientMeta(req);
   const fbc = buildFbc(body.fbc, body.sourceUrl);
   const fbp = body.fbp || undefined;
-  const product = (body.product || "").slice(0, 80);
+  // Tanlov majburiy va faqat katalogdagi mahsulot qabul qilinadi
+  const sel = findSelection(body.selection);
+  if (!sel) {
+    return NextResponse.json({ ok: false, error: "Mahsulot va rangni tanlang" }, { status: 422 });
+  }
+  const product = `${sel.product.title} — ${sel.variant.color}`;
+  const priceText = sel.product.price
+    ? `${formatSum(sel.product.price)}` + (sel.product.oldPrice ? ` <s>${formatSum(sel.product.oldPrice)}</s>` : "")
+    : "narxini so'radi";
   const sourceUrl = (body.sourceUrl || "").slice(0, 500);
 
   const [first, ...rest] = normalizeName(name).split(" ");
@@ -73,7 +82,8 @@ export async function POST(req: Request) {
     fbc,
     ip,
     ua: ua?.slice(0, 300),
-    pr: product || undefined,
+    pr: product,
+    pv: sel.product.price,
     mp: maskPhone(phone),
     url: sourceUrl || undefined,
   };
@@ -95,7 +105,9 @@ export async function POST(req: Request) {
     `🧥 <b>Yangi lid — MaryKids</b>\n\n` +
     `👤 <b>Ism:</b> ${escapeHtml(name)}\n` +
     `📞 <b>Tel:</b> <a href="tel:+${phone}">${formatPhone(phone)}</a>\n` +
-    (product ? `🛍 <b>Mahsulot:</b> ${escapeHtml(product)}\n` : "") +
+    `\n🛍 <b>Tanlovi:</b> ${escapeHtml(sel.product.title)}\n` +
+    `🎨 <b>${sel.product.variantLabel || "Rang"}:</b> ${escapeHtml(sel.variant.color)}\n` +
+    `💵 <b>Narx:</b> ${priceText}\n\n` +
     `🕒 ${tashkentTime()}` +
     utm +
     `\n\n🔐 <a href="${purchaseLink}">💰 Xarid qildi → summani Meta'ga yuborish</a>`;
@@ -116,7 +128,13 @@ export async function POST(req: Request) {
         client_ip_address: ip,
         client_user_agent: ua,
       },
-      custom_data: { content_name: product || "MaryKids lid", content_category: "kids_outerwear" },
+      custom_data: {
+        content_ids: [sel.key],
+        content_name: product,
+        content_category: sel.product.category,
+        content_type: "product",
+        ...(sel.product.price ? { value: sel.product.price, currency: "UZS" } : {}),
+      },
     }),
   ]);
 
